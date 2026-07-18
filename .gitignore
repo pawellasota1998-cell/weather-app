@@ -1,21 +1,23 @@
-# Environment
-.env
-.venv/
-venv/
-
 # Python
 __pycache__/
 *.py[cod]
-*.pyo
 *.pyd
+*.so
+
+# Virtual environment
+.venv/
+venv/
+
+# Environment variables
+.env
 
 # Django
-*.log
 db.sqlite3
-media/
 staticfiles/
+media/
+*.log
 
-# Tests
+# Tests and coverage
 .pytest_cache/
 .coverage
 htmlcov/
@@ -27,6 +29,3 @@ htmlcov/
 # Operating system
 .DS_Store
 Thumbs.db
-
-docker/certs/*.crt
-docker/certs/*.cer
