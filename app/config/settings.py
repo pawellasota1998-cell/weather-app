@@ -77,12 +77,14 @@ ALLOWED_HOSTS = get_env_list(name= "DJANGO_ALLOWED_HOSTS", default= "localhost,1
 # Application definition
 
 INSTALLED_APPS = [
+    "jazzmin",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "import_export",
     "weather.apps.WeatherConfig",
 ]
 
@@ -97,6 +99,55 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "config.urls"
+
+JAZZMIN_SETTINGS = {
+    "site_title": "Weather Admin",
+    "site_header": "Weather",
+    "site_brand": "Weather",
+    "welcome_sign": "Witaj w panelu administracyjnym Weather",
+    "copyright": "Paweł Lasota",
+    "show_sidebar": True,
+    "navigation_expanded": True,
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user",
+        "auth.Group": "fas fa-users",
+        "weather.PrecipitationMeasurement": "fas fa-cloud-rain",
+    },
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "navbar_small_text": False,
+    "footer_small_text": False,
+    "body_small_text": False,
+    "brand_small_text": False,
+    "brand_colour": False,
+    "accent": "accent-primary",
+    "navbar": "navbar-light",
+    "no_navbar_border": False,
+    "navbar_fixed": False,
+    "layout_boxed": False,
+    "footer_fixed": False,
+    "sidebar_fixed": False,
+    "sidebar": "sidebar-light-primary",
+    "sidebar_nav_small_text": False,
+    "sidebar_disable_expand": False,
+    "sidebar_nav_child_indent": False,
+    "sidebar_nav_compact_style": False,
+    "sidebar_nav_legacy_style": False,
+    "sidebar_nav_flat_style": False,
+    "theme": "flatly",
+    "default_theme_mode": "light",
+    "button_classes": {
+        "primary": "btn-primary",
+        "secondary": "btn-secondary",
+        "info": "btn-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "success": "btn-success"
+    }
+}
+
 
 TEMPLATES = [
     {
