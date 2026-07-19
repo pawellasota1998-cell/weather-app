@@ -1,26 +1,14 @@
-from dataclasses import dataclass
+
 from datetime import date
 from decimal import ROUND_HALF_UP, Decimal
-
+from common.date.utils import get_next_month_first_date
 from django.db.models import Avg, Count
 
 from weather.models import PrecipitationMeasurement
+from weather.types import MonthlyPrecipitationStatistics
+from weather.exceptions import NoPrecipitationMeasurementsError
 
 TWO_DECIMAL_PLACES = Decimal("0.01")
-
-
-class NoPrecipitationMeasurementsError(LookupError):
-    """Brak pomiarów potrzebnych do obliczenia statystyk."""
-
-
-@dataclass(frozen=True, slots=True)
-class MonthlyPrecipitationStatistics:
-    year: int
-    month: int
-    measurement_count: int
-    average_snow: Decimal
-    average_rain: Decimal
-    average_total: Decimal
 
 
 def get_latest_month_statistics() -> MonthlyPrecipitationStatistics:
@@ -37,7 +25,7 @@ def get_latest_month_statistics() -> MonthlyPrecipitationStatistics:
         raise NoPrecipitationMeasurementsError("W bazie danych nie ma żadnych pomiarów.")
 
     month_start = latest_measurement_date.replace(day=1)
-    next_month_start = _get_next_month_start(month_start)
+    next_month_start = get_next_month_first_date(month_start)
 
     monthly_measurements = PrecipitationMeasurement.objects.filter(
         measurement_date__gte=month_start,
@@ -66,21 +54,6 @@ def get_latest_month_statistics() -> MonthlyPrecipitationStatistics:
         average_snow=_round_decimal(average_snow),
         average_rain=_round_decimal(average_rain),
         average_total=_round_decimal(average_total),
-    )
-
-
-def _get_next_month_start(month_start: date) -> date:
-    if month_start.month == 12:
-        return date(
-            year=month_start.year + 1,
-            month=1,
-            day=1,
-        )
-
-    return date(
-        year=month_start.year,
-        month=month_start.month + 1,
-        day=1,
     )
 
 
