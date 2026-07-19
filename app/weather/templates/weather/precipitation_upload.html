@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Import CSV | Weather
+{% endblock %}
+
+{% block content %}
+    <section class="page-header">
+        <h1>Import pomiarów opadów</h1>
+
+        <p>
+            Wybierz plik CSV zawierający dzienne pomiary
+            opadów śniegu i deszczu.
+        </p>
+    </section>
+
+    <section class="card">
+        <h2>Wgraj plik</h2>
+
+        <form
+            method="post"
+            enctype="multipart/form-data" 
+            novalidate
+        >
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div
+                    class="alert alert-error"
+                    role="alert"
+                >
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="form-field">
+                <label for="{{ form.csv_file.id_for_label }}">
+                    {{ form.csv_file.label }}
+                </label>
+
+                {{ form.csv_file }}
+
+                {% if form.csv_file.help_text %}
+                    <p class="help-text">
+                        {{ form.csv_file.help_text }}
+                    </p>
+                {% endif %}
+
+                {% if form.csv_file.errors %}
+                    <div
+                        class="field-errors"
+                        role="alert"
+                    >
+                        {% for error in form.csv_file.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <button
+                class="button button-primary"
+                type="submit"
+            >
+                Importuj dane
+            </button>
+        </form>
+    </section>
+
+    <section class="card">
+        <h2>Wymagany format</h2>
+
+        <p>
+            Plik powinien używać kodowania UTF-8
+            i separatora średnikowego.
+        </p>
+
+        <pre><code>date;snow;rain
+2022-12-01;4.5;2.3
+2022-12-02;0.0;6.1</code></pre>
+
+        <p>
+            Ponowne przesłanie tego samego pliku
+            nie utworzy zduplikowanych pomiarów.
+        </p>
+    </section>
+{% endblock %}

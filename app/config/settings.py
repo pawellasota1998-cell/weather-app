@@ -223,3 +223,5 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+WEATHER_MAX_CSV_UPLOAD_SIZE = 2 * 1024 * 1024

@@ -15,31 +15,28 @@ class Command(BaseCommand):
     def add_arguments(self, parser: CommandParser) -> None:
         parser.add_argument(
             "file_path",
-            nargs="?", #argument opcjonalny
+            nargs="?",  # argument opcjonalny
             type=Path,
             default=Path(settings.BASE_DIR) / "data" / "precipitation.csv",
             help=("Ścieżka do pliku CSV. Domyślnie: data/precipitation.csv"),
         )
 
     def handle(self, *args: Any, **options: Any) -> None:
-        file_path: Path = options["file_path"].expanduser() # rozwija symbol katalogu domowego ~ np. C:\Users\palasota
-        if not file_path.is_absolute(): #sprawdzamy czy ścieżka jest absolutna
-            file_path = Path.cwd() / file_path #Dodajemy absolutny katalog, Path.cwd() - miejsce uruchomienia komendy, to nie jkest to samo co  settings.BASE_DIR
+        file_path: Path = options["file_path"].expanduser()  # rozwija symbol katalogu domowego ~ np. C:\Users\palasota
+        if not file_path.is_absolute():  # sprawdzamy czy ścieżka jest absolutna
+            file_path = Path.cwd() / file_path  # Dodajemy absolutny katalog,
+            # Path.cwd() - miejsce uruchomienia komendy, to nie jkest to samo co  settings.BASE_DIR
 
-        file_path = file_path.resolve() # normalizacja ścieżki, usuwane są fragmenty ., .., mamy ścieżkę absolutną
+        file_path = file_path.resolve()  # normalizacja ścieżki, usuwane są fragmenty ., .., mamy ścieżkę absolutną
 
         if not file_path.exists():
-            raise CommandError(
-                f"Plik nie istnieje: {file_path}"
-            )
+            raise CommandError(f"Plik nie istnieje: {file_path}")
 
         if not file_path.is_file():
-            raise CommandError(
-                f"Podana ścieżka nie wskazuje pliku: {file_path}"
-            )
+            raise CommandError(f"Podana ścieżka nie wskazuje pliku: {file_path}")
 
         try:
-            with file_path.open("rb") as csv_file: # r - read, b - binary
+            with file_path.open("rb") as csv_file:  # r - read, b - binary
                 result = import_precipitation_csv(csv_file)
         except PrecipitationCsvError as exc:
             raise CommandError(f"Nie udało się zaimportować CSV: {exc}") from exc
@@ -48,7 +45,7 @@ class Command(BaseCommand):
         except DatabaseError as exc:
             raise CommandError(f"Błąd bazy danych podczas importowania CSV: {exc}") from exc
 
-        #Wuświetlenie w konsoli podsumowania
+        # Wuświetlenie w konsoli podsumowania
         self.stdout.write(self.style.SUCCESS("Import zakończony pomyślnie."))
 
         self.stdout.write(f"Plik: {file_path}")
