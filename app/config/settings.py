@@ -1,6 +1,8 @@
 import os
 from pathlib import Path
+
 from dotenv import load_dotenv
+
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 load_dotenv(BASE_DIR / ".env")
@@ -9,17 +11,15 @@ TRUE_VALUES = {"1", "true", "yes", "on"}
 FALSE_VALUES = {"0", "false", "no", "off"}
 
 
-def get_env(name:str, default:str | None = None) -> str:
+def get_env(name: str, default: str | None = None) -> str:
     value = os.getenv(name, default)
 
     if value is None or not value.strip():
-        raise RuntimeError(
-            f"Missing required environment variable: {name}"
-        )
+        raise RuntimeError(f"Missing required environment variable: {name}")
     return value
 
 
-def get_env_bool(name:str, default:bool =False) -> bool:
+def get_env_bool(name: str, default: bool = False) -> bool:
     value = get_env(name, str(default)).strip().lower()
 
     if value in TRUE_VALUES:
@@ -28,20 +28,13 @@ def get_env_bool(name:str, default:bool =False) -> bool:
     if value in FALSE_VALUES:
         return False
 
-    raise RuntimeError(
-        f"Environment variable {name} must be a boolean value."
-    )
+    raise RuntimeError(f"Environment variable {name} must be a boolean value.")
 
 
 def get_env_list(name: str, default: str = "") -> list[str]:
     value = get_env(name, default)
 
-    return [
-        item.strip()
-        for item in value.split(",")
-        if item.strip()
-    ]
-
+    return [item.strip() for item in value.split(",") if item.strip()]
 
 
 """
@@ -56,7 +49,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
-from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -66,12 +58,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = get_env(name= "DJANGO_SECRET_KEY")
+SECRET_KEY = get_env(name="DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = get_env_bool(name="DJANGO_DEBUG")
 
-ALLOWED_HOSTS = get_env_list(name= "DJANGO_ALLOWED_HOSTS", default= "localhost,127.0.0.1")
+ALLOWED_HOSTS = get_env_list(name="DJANGO_ALLOWED_HOSTS", default="localhost,127.0.0.1")
 
 
 # Application definition
@@ -144,8 +136,8 @@ JAZZMIN_UI_TWEAKS = {
         "info": "btn-info",
         "warning": "btn-warning",
         "danger": "btn-danger",
-        "success": "btn-success"
-    }
+        "success": "btn-success",
+    },
 }
 
 
@@ -182,10 +174,7 @@ DATABASES = {
         "CONN_MAX_AGE": 0,
         "OPTIONS": {
             "driver": "ODBC Driver 18 for SQL Server",
-            "extra_params": (
-                "Encrypt=yes;"
-                "TrustServerCertificate=yes"
-            ),
+            "extra_params": ("Encrypt=yes;TrustServerCertificate=yes"),
             "connection_timeout": 10,
             "connection_retries": 5,
             "connection_retry_backoff_time": 3,
