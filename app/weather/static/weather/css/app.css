@@ -125,21 +125,31 @@ body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 0.7rem 1rem;
+    gap: 0.5rem;
+
+    padding: 0.3rem 0.5rem;
     border: 0;
-    border-radius: 0.5rem;
+    border-radius: 0.75rem;
     font: inherit;
-    font-weight: 600;
+    font-weight: 400;
     text-decoration: none;
     cursor: pointer;
+
+    transition: /* animacje, każda zmiana tych parametrów następuje w przeciągu 0.15 s */
+      background-color 0.15s ease, /* ease funkcja czasowa , przejscia pomiędzy stanami start wolny,środek szybki, koniec wolny */
+      border-color 0.15s ease,
+      color 0.15s ease,
+      box-shadow 0.15s ease;
 }
 .button-primary {
+    background-color: #1a3158;
     color: #ffffff;
-    background: #2563eb;
 }
 
 .button-primary:hover {
-    background: #1d4ed8;
+    background-color:#12233f;
+    box-shadow: 0 4px 6px -1px rgba(23, 43, 77, 0.3), 0 2px 4px -1px rgba(23, 43, 77, 0.2);
+    transform: scale(1.02);
 }
 
 .button-primary:focus {
@@ -405,6 +415,9 @@ pre {
     color: #1d4ed8;
     border-color: #2563eb;
     background: #eff6ff;
+
+    box-shadow: 0 4px 6px -1px rgba(23, 43, 77, 0.3), 0 2px 4px -1px rgba(23, 43, 77, 0.2);
+    transform: scale(1.02);
 }
 
 .button-secondary:focus {
