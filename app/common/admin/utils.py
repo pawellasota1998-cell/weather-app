@@ -1,5 +1,6 @@
 from django.apps import apps
 from django.contrib import admin
+from django.contrib.admin.exceptions import AlreadyRegistered
 from django.db import models
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
@@ -84,5 +85,5 @@ def register_all_models(app_label: str, exclude_models=None, import_id_candidate
                     {"import_id_candidates": import_id_candidates},  # atrybut klasy
                 ),
             )
-        except admin.sites.AlreadyRegistered:
+        except AlreadyRegistered:
             pass

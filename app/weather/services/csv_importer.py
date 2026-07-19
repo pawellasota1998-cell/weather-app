@@ -9,6 +9,7 @@ from typing import IO
 
 from django.core.exceptions import ValidationError
 from django.db import transaction
+from django.db.models import Field
 
 from weather.models import PrecipitationMeasurement
 
@@ -179,7 +180,8 @@ def _is_empty_row(row: dict[str | None, str | list[str | None]]) -> bool:
     ]
 
     return all(
-        value is None or (isinstance(value, str) and not value.strip()) for value in values  # Sprawdzamy pusty wiersz
+        value is None or (isinstance(value, str) and not value.strip())
+        for value in values  # Sprawdzamy pusty wiersz
     )
 
 
@@ -221,6 +223,9 @@ def _parse_precipitation_value(raw_value: str, *, column_name: str, model_field_
         raise PrecipitationCsvError(f"Wiersz {line_number}: wartość w kolumnie '{column_name}' nie może być ujemna.")
 
     model_field = PrecipitationMeasurement._meta.get_field(model_field_name)
+
+    if not isinstance(model_field, Field):
+        raise PrecipitationCsvError(f"Pole '{model_field_name}' nie jest zwykłym polem modelu.")
 
     try:
         cleaned_value = model_field.clean(value, None)

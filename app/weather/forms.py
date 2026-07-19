@@ -23,7 +23,15 @@ class PrecipitationCsvUploadForm(forms.Form):
     def clean_csv_file(self) -> UploadedFile:
         uploaded_file: UploadedFile = self.cleaned_data["csv_file"]
 
-        file_extension = Path(uploaded_file.name).suffix.lower()
+        file_name = uploaded_file.name
+
+        if not file_name:
+            raise ValidationError(
+                "Przesłany plik nie ma nazwy.",
+                code="missing_file_name",
+            )
+
+        file_extension = Path(file_name).suffix.lower()
 
         if file_extension != ".csv":
             raise ValidationError(
@@ -37,7 +45,15 @@ class PrecipitationCsvUploadForm(forms.Form):
             DEFAULT_MAX_CSV_UPLOAD_SIZE,
         )
 
-        if uploaded_file.size > max_size:
+        file_size = uploaded_file.size
+
+        if file_size is None:
+            raise ValidationError(
+                "Nie udało się określić rozmiaru pliku.",
+                code="unknown_file_size",
+            )
+
+        if file_size > max_size:
             max_size_mb = max_size / (1024 * 1024)
 
             raise ValidationError(
