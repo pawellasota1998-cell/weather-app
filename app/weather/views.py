@@ -1,19 +1,56 @@
-# Create your views here.
 import logging
+from typing import Any
 
 from django.contrib import messages
 from django.db import DatabaseError
+from django.db.models import QuerySet
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_http_methods
+from django.views.generic import ListView
 
 from weather.forms import PrecipitationCsvUploadForm
+from weather.models import PrecipitationMeasurement
 from weather.services.csv_importer import (
     PrecipitationCsvError,
     import_precipitation_csv,
 )
 
 logger = logging.getLogger(__name__)
+
+
+class PrecipitationMeasurementListView(ListView):
+    model = PrecipitationMeasurement
+    template_name = "weather/precipitation_list.html"
+    context_object_name = "measurements"
+    paginate_by = 20
+
+    def get_queryset(
+        self,
+    ) -> QuerySet[PrecipitationMeasurement]:
+        return PrecipitationMeasurement.objects.only(
+            "measurement_date",
+            "snow",
+            "rain",
+        ).order_by("measurement_date")
+
+    def get_context_data(
+        self,
+        **kwargs: Any,
+    ) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+
+        paginator = context["paginator"]
+        page_obj = context["page_obj"]
+
+        context["total_measurements"] = paginator.count
+        context["pagination_range"] = paginator.get_elided_page_range(
+            page_obj.number,
+            on_each_side=2,
+            on_ends=1,
+        )
+
+        return context
 
 
 @require_http_methods(["GET", "POST"])
@@ -56,7 +93,7 @@ def upload_precipitation_csv(
                     ),
                 )
 
-                return redirect("weather:precipitation-upload")
+                return redirect("weather:precipitation-list")
     else:
         form = PrecipitationCsvUploadForm()
 

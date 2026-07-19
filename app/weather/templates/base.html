@@ -20,25 +20,35 @@
 </head>
 
 <body>
-    <header class="site-header">
-        <div class="container header-content">
+<header class="site-header">
+    <div class="container header-content">
+        <a
+            class="site-brand"
+            href="{% url 'weather:precipitation-list' %}"
+        >
+            Weather
+        </a>
+
+        <nav
+            class="navigation"
+            aria-label="Główna nawigacja"
+        >
             <a
-                class="site-brand"
-                href="{% url 'weather:precipitation-upload' %}"
+                class="navigation-link"
+                href="{% url 'weather:precipitation-list' %}"
             >
-                Weather
+                Pomiary
             </a>
 
-            <nav aria-label="Główna nawigacja">
-                <a
-                    class="navigation-link"
-                    href="{% url 'weather:precipitation-upload' %}"
-                >
-                    Import CSV
-                </a>
-            </nav>
-        </div>
-    </header>
+            <a
+                class="navigation-link"
+                href="{% url 'weather:precipitation-upload' %}"
+            >
+                Import CSV
+            </a>
+        </nav>
+    </div>
+</header>
 
     <main class="container main-content">
         {% if messages %}

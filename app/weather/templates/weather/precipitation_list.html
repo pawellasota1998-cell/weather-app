@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Pomiary opadów | Weather
+{% endblock %}
+
+{% block content %}
+    <section class="page-header page-header-with-actions">
+        <div>
+            <h1>Pomiary opadów</h1>
+
+            <p>
+                Dzienne pomiary opadów śniegu i deszczu
+                zapisane w bazie danych.
+            </p>
+        </div>
+
+        <a
+            class="button button-primary"
+            href="{% url 'weather:precipitation-upload' %}"
+        >
+            Wgraj plik CSV
+        </a>
+    </section>
+
+    <section
+        class="summary-card"
+        aria-label="Podsumowanie"
+    >
+        <span class="summary-label">
+            Liczba pomiarów
+        </span>
+
+        <strong class="summary-value">
+            {{ total_measurements }}
+        </strong>
+    </section>
+
+    <section class="card table-card">
+        <div class="table-card-header">
+            <h2>Lista pomiarów</h2>
+        </div>
+
+        {% if measurements %}
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <caption class="visually-hidden">
+                        Lista dziennych pomiarów opadów
+                    </caption>
+
+                    <thead>
+                        <tr>
+                            <th scope="col">
+                                Data pomiaru
+                            </th>
+
+                            <th
+                                class="numeric-cell"
+                                scope="col"
+                            >
+                                Opad śniegu
+                            </th>
+
+                            <th
+                                class="numeric-cell"
+                                scope="col"
+                            >
+                                Opad deszczu
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for measurement in measurements %}
+                            <tr>
+                                <td>
+                                    {{ measurement.measurement_date|date:"d.m.Y" }}
+                                </td>
+
+                                <td class="numeric-cell">
+                                    {{ measurement.snow|floatformat:2 }}
+                                </td>
+
+                                <td class="numeric-cell">
+                                    {{ measurement.rain|floatformat:2 }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="table-footer">
+                <p class="table-summary">
+                    Wyświetlono rekordy
+                    {{ page_obj.start_index }}–{{ page_obj.end_index }}
+                    z {{ paginator.count }}.
+                </p>
+
+                {% if is_paginated %}
+                    <nav
+                        class="pagination"
+                        aria-label="Strony tabeli pomiarów"
+                    >
+                        {% if page_obj.has_previous %}
+                            <a
+                                class="pagination-link"
+                                href="?page=1"
+                                aria-label="Pierwsza strona"
+                            >
+                                «
+                            </a>
+
+                            <a
+                                class="pagination-link"
+                                href="?page={{ page_obj.previous_page_number }}"
+                            >
+                                Poprzednia
+                            </a>
+                        {% endif %}
+
+                        {% for page_number in pagination_range %}
+                            {% if page_number == paginator.ELLIPSIS %}
+                                <span
+                                    class="pagination-ellipsis"
+                                    aria-hidden="true"
+                                >
+                                    {{ page_number }}
+                                </span>
+                            {% elif page_number == page_obj.number %}
+                                <span
+                                    class="pagination-current"
+                                    aria-current="page"
+                                >
+                                    {{ page_number }}
+                                </span>
+                            {% else %}
+                                <a
+                                    class="pagination-link"
+                                    href="?page={{ page_number }}"
+                                    aria-label="Strona {{ page_number }}"
+                                >
+                                    {{ page_number }}
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if page_obj.has_next %}
+                            <a
+                                class="pagination-link"
+                                href="?page={{ page_obj.next_page_number }}"
+                            >
+                                Następna
+                            </a>
+
+                            <a
+                                class="pagination-link"
+                                href="?page={{ paginator.num_pages }}"
+                                aria-label="Ostatnia strona"
+                            >
+                                »
+                            </a>
+                        {% endif %}
+                    </nav>
+                {% endif %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <h3>Brak pomiarów</h3>
+
+                <p>
+                    W bazie danych nie ma jeszcze żadnych
+                    pomiarów opadów.
+                </p>
+
+                <a
+                    class="button button-primary"
+                    href="{% url 'weather:precipitation-upload' %}"
+                >
+                    Zaimportuj pierwszy plik
+                </a>
+            </div>
+        {% endif %}
+    </section>
+{% endblock %}
