@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block title %}
     Pomiary opadów | Weather
 {% endblock %}
@@ -15,12 +15,23 @@
             </p>
         </div>
 
-        <a
-            class="button button-primary"
-            href="{% url 'weather:precipitation-upload' %}"
-        >
-            Wgraj plik CSV
-        </a>
+        <div class="page-actions">
+            <button
+                id="open-statistics-modal"
+                class="button button-secondary"
+                type="button"
+                data-statistics-url="{% url 'weather:latest-month-statistics' %}"
+            >
+                Pokaż średnie opady
+            </button>
+
+            <a
+                class="button button-primary"
+                href="{% url 'weather:precipitation-upload' %}"
+            >
+                Wgraj plik CSV
+            </a>
+        </div>
     </section>
 
     <section
@@ -182,4 +193,101 @@
             </div>
         {% endif %}
     </section>
+<dialog
+    id="statistics-modal"
+    class="modal"
+    aria-labelledby="statistics-modal-title"
+>
+    <div class="modal-content">
+        <header class="modal-header">
+            <div>
+                <h2 id="statistics-modal-title">
+                    Średnie opady
+                </h2>
+
+                <p
+                    id="statistics-period"
+                    class="modal-subtitle"
+                >
+                </p>
+            </div>
+
+            <button
+                class="modal-close-button"
+                type="button"
+                data-modal-close
+                aria-label="Zamknij modal"
+            >
+                ×
+            </button>
+        </header>
+
+        <div
+            class="modal-body"
+            aria-live="polite"
+        >
+            <p
+                id="statistics-status"
+                class="statistics-status"
+            >
+                Pobieranie danych...
+            </p>
+
+            <dl
+                id="statistics-results"
+                class="statistics-grid"
+                hidden
+            >
+                <div class="statistics-item">
+                    <dt>Liczba pomiarów</dt>
+
+                    <dd id="statistics-count">
+                        —
+                    </dd>
+                </div>
+
+                <div class="statistics-item">
+                    <dt>Średni opad śniegu</dt>
+
+                    <dd id="statistics-snow">
+                        —
+                    </dd>
+                </div>
+
+                <div class="statistics-item">
+                    <dt>Średni opad deszczu</dt>
+
+                    <dd id="statistics-rain">
+                        —
+                    </dd>
+                </div>
+
+                <div class="statistics-item statistics-item-total">
+                    <dt>Średni łączny opad</dt>
+
+                    <dd id="statistics-total">
+                        —
+                    </dd>
+                </div>
+            </dl>
+        </div>
+
+        <footer class="modal-footer">
+            <button
+                class="button button-secondary"
+                type="button"
+                data-modal-close
+            >
+                Zamknij
+            </button>
+        </footer>
+    </div>
+</dialog>
+{% endblock %}
+
+{% block scripts %}
+    <script
+        src="{% static 'weather/js/precipitation_statistics.js' %}"
+        defer
+    ></script>
 {% endblock %}

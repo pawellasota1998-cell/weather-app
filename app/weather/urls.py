@@ -24,4 +24,9 @@ urlpatterns = [
         views.upload_precipitation_csv,
         name="precipitation-upload",
     ),
+    path(
+        "measurements/statistics/latest-month/",
+        views.latest_month_statistics,
+        name="latest-month-statistics",
+    ),
 ]

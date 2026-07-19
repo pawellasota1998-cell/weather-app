@@ -4,9 +4,9 @@ from typing import Any
 from django.contrib import messages
 from django.db import DatabaseError
 from django.db.models import QuerySet
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
-from django.views.decorators.http import require_http_methods
+from django.views.decorators.http import require_GET, require_http_methods
 from django.views.generic import ListView
 
 from weather.forms import PrecipitationCsvUploadForm
@@ -14,6 +14,10 @@ from weather.models import PrecipitationMeasurement
 from weather.services.csv_importer import (
     PrecipitationCsvError,
     import_precipitation_csv,
+)
+from weather.services.precipitation_statistics import (
+    NoPrecipitationMeasurementsError,
+    get_latest_month_statistics,
 )
 
 logger = logging.getLogger(__name__)
@@ -51,6 +55,60 @@ class PrecipitationMeasurementListView(ListView):
         )
 
         return context
+
+
+@require_GET
+def latest_month_statistics(
+    request: HttpRequest,
+) -> JsonResponse:
+    try:
+        statistics = get_latest_month_statistics()
+    except NoPrecipitationMeasurementsError as exc:
+        return JsonResponse(
+            {
+                "error": {
+                    "code": "NO_MEASUREMENTS",
+                    "message": str(exc),
+                }
+            },
+            status=404,
+        )
+    except DatabaseError:
+        logger.exception("Błąd bazy danych podczas obliczania statystyk.")
+
+        return JsonResponse(
+            {
+                "error": {
+                    "code": "DATABASE_ERROR",
+                    "message": ("Nie udało się pobrać statystyk. Spróbuj ponownie."),
+                }
+            },
+            status=500,
+        )
+
+    return JsonResponse(
+        {
+            "period": {
+                "year": statistics.year,
+                "month": statistics.month,
+            },
+            "measurement_count": statistics.measurement_count,
+            "averages": {
+                "snow": format(
+                    statistics.average_snow,
+                    ".2f",
+                ),
+                "rain": format(
+                    statistics.average_rain,
+                    ".2f",
+                ),
+                "total": format(
+                    statistics.average_total,
+                    ".2f",
+                ),
+            },
+        }
+    )
 
 
 @require_http_methods(["GET", "POST"])
