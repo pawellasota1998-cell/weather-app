@@ -1,0 +1,21 @@
+.messages {
+    margin-bottom: 1.5rem;
+}
+
+.alert {
+    padding: 1rem;
+    border: 1px solid transparent;
+    border-radius: 0.5rem;
+}
+
+.alert-success {
+    color: #166534;
+    background: #f0fdf4;
+    border-color: #86efac;
+}
+
+.alert-error {
+    color: #991b1b;
+    background: #fef2f2;
+    border-color: #fca5a5;
+}

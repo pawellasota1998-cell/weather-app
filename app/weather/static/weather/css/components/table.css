@@ -1,0 +1,141 @@
+.table-card {
+    padding: 0;
+    overflow: hidden;
+}
+
+.table-card-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.table-card-header h2 {
+    margin: 0;
+}
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table th,
+.data-table td {
+    padding: 0.9rem 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.data-table th {
+    color: #374151;
+    background: #f9fafb;
+    font-size: 0.875rem;
+    font-weight: 700;
+}
+
+.data-table tbody tr:hover {
+    background: #f9fafb;
+}
+
+.data-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.numeric-cell {
+    text-align: right !important;
+    font-variant-numeric: tabular-nums;
+}
+
+.table-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+.table-summary {
+    margin: 0;
+    color: #4b5563;
+    font-size: 0.875rem;
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+}
+
+.pagination-link,
+.pagination-current {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.25rem;
+    min-height: 2.25rem;
+    padding: 0.35rem 0.65rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.4rem;
+    text-decoration: none;
+}
+
+.pagination-link {
+    color: #1f2937;
+    background: #ffffff;
+}
+
+.pagination-link:hover {
+    color: #1d4ed8;
+    border-color: #2563eb;
+}
+
+.pagination-link:focus {
+    outline: 3px solid rgb(37 99 235 / 25%);
+    outline-offset: 2px;
+}
+
+.pagination-current {
+    color: #ffffff;
+    background: #2563eb;
+    border-color: #2563eb;
+    font-weight: 700;
+}
+
+.pagination-ellipsis {
+    padding-inline: 0.35rem;
+    color: #6b7280;
+}
+
+.empty-state {
+    padding: 3rem 1.5rem;
+    text-align: center;
+}
+
+.empty-state h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: #4b5563;
+}
+
+@media (max-width: 700px) {
+    .table-footer {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .pagination {
+        justify-content: flex-start;
+    }
+}
