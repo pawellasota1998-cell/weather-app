@@ -1,7 +1,6 @@
 from common.csv.exceptions import CsvReadError
 
 
-
 def is_empty_csv_row(row: dict[str | None, str | list[str | None]]) -> bool:
     # Funkcja sprawdza czy mamy jakiś cały pusty wiersz
     values = [
@@ -11,8 +10,7 @@ def is_empty_csv_row(row: dict[str | None, str | list[str | None]]) -> bool:
     ]
 
     return all(
-        value is None or (isinstance(value, str) and not value.strip())
-        for value in values  # Sprawdzamy pusty wiersz
+        value is None or (isinstance(value, str) and not value.strip()) for value in values  # Sprawdzamy pusty wiersz
     )
 
 

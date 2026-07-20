@@ -1,8 +1,9 @@
 from typing import IO
+
 from common.csv.exceptions import CsvReadError
 
 
-def read_text_file (file_obj: IO[bytes] | IO[str]) -> str:
+def read_text_file(file_obj: IO[bytes] | IO[str]) -> str:
     try:
         file_obj.seek(0)
     except (AttributeError, OSError):

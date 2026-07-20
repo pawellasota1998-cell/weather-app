@@ -1,23 +1,25 @@
 from __future__ import annotations
+
 import csv
-from datetime import date, datetime
+from datetime import date
 from decimal import Decimal, InvalidOperation
 from io import StringIO
 from typing import IO
+
 from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.db.models import Field
-from weather.models import PrecipitationMeasurement
-from weather.exceptions import PrecipitationCsvError
-from weather.types import PrecipitationCsvRow
-from weather.types import ImportResult
-from common.csv.readers import read_text_file
+
 from common.csv.exceptions import CsvReadError
-from common.csv.rows import is_empty_csv_row
-from common.csv.rows import get_required_csv_value
 from common.csv.parsers import parse_csv_date
+from common.csv.readers import read_text_file
+from common.csv.rows import get_required_csv_value, is_empty_csv_row
+from weather.exceptions import PrecipitationCsvError
+from weather.models import PrecipitationMeasurement
+from weather.types import ImportResult, PrecipitationCsvRow
 
 EXPECTED_HEADERS = ("date", "snow", "rain")
+
 
 def import_precipitation_csv(file_obj: IO[bytes] | IO[str]) -> ImportResult:
     """
@@ -71,8 +73,8 @@ def parse_precipitation_csv(file_obj: IO[bytes] | IO[str]) -> list[Precipitation
     try:
         text = read_text_file(file_obj)
     except CsvReadError as exc:
-        raise PrecipitationCsvError (str(exc) ) from exc
-    
+        raise PrecipitationCsvError(str(exc)) from exc
+
     reader = csv.DictReader(StringIO(text, newline=""), delimiter=";")
 
     if reader.fieldnames is None:
@@ -121,9 +123,8 @@ def parse_precipitation_csv(file_obj: IO[bytes] | IO[str]) -> list[Precipitation
                 line_number=line_number,
             )
         except CsvReadError as exc:
-            raise PrecipitationCsvError (str(exc)) from exc
-        
-        
+            raise PrecipitationCsvError(str(exc)) from exc
+
         previous_line = date_line_number.get(measurement_date)
 
         if previous_line is not None:

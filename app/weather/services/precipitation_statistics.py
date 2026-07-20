@@ -1,12 +1,11 @@
-
-from datetime import date
 from decimal import ROUND_HALF_UP, Decimal
-from common.date.utils import get_next_month_first_date
+
 from django.db.models import Avg, Count
 
+from common.date.utils import get_next_month_first_date
+from weather.exceptions import NoPrecipitationMeasurementsError
 from weather.models import PrecipitationMeasurement
 from weather.types import MonthlyPrecipitationStatistics
-from weather.exceptions import NoPrecipitationMeasurementsError
 
 TWO_DECIMAL_PLACES = Decimal("0.01")
 
